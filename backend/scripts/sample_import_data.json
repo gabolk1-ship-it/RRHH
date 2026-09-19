@@ -1,0 +1,85 @@
+{
+  "users": [
+    {
+      "email": "juan.perez@hospital.ec",
+      "firstName": "Juan",
+      "lastName": "Pérez García",
+      "role": "EMPLOYEE",
+      "departmentId": "dept-001",
+      "employeeId": "EMP0001",
+      "password": "TempPass123!@"
+    },
+    {
+      "email": "maria.rodriguez@hospital.ec",
+      "firstName": "Maria",
+      "lastName": "Rodríguez López",
+      "role": "EMPLOYEE",
+      "departmentId": "dept-002",
+      "employeeId": "EMP0002"
+    },
+    {
+      "email": "carlos.sanchez@hospital.ec",
+      "firstName": "Carlos",
+      "lastName": "Sánchez Morales",
+      "role": "SUPERVISOR",
+      "departmentId": "dept-001",
+      "employeeId": "SUP0001"
+    },
+    {
+      "email": "Ana.Martinez@hospital.ec",
+      "firstName": "Ana",
+      "lastName": "Martínez Ramírez",
+      "role": "DEPARTMENT_HEAD",
+      "departmentId": "dept-002",
+      "employeeId": "HEAD0001"
+    },
+    {
+      "email": "luis.torres@hospital.ec",
+      "firstName": "Luis",
+      "lastName": "Torres González",
+      "role": "HR_MANAGER",
+      "departmentId": "dept-admin",
+      "employeeId": "HR0001"
+    },
+    {
+      "email": "sofia.vasquez@hospital.ec",
+      "firstName": "Sofia",
+      "lastName": "Vásquez Espinoza",
+      "role": "EMPLOYEE",
+      "departmentId": "dept-001",
+      "employeeId": "EMP0003"
+    },
+    {
+      "email": "diego.flores@hospital.ec",
+      "firstName": "Diego",
+      "lastName": "Flores Ríos",
+      "role": "EMPLOYEE",
+      "departmentId": "dept-003",
+      "employeeId": "EMP0004"
+    },
+    {
+      "email": "elena.jimenez@hospital.ec",
+      "firstName": "Elena",
+      "lastName": "Jiménez Ortiz",
+      "role": "SUPERVISOR",
+      "departmentId": "dept-003",
+      "employeeId": "SUP0002"
+    },
+    {
+      "email": "andres.castro@hospital.ec",
+      "firstName": "Andrés",
+      "lastName": "Castro Vargas",
+      "role": "EMPLOYEE",
+      "departmentId": "dept-002",
+      "employeeId": "EMP0005"
+    },
+    {
+      "email": "patricia.moreno@hospital.ec",
+      "firstName": "Patricia",
+      "lastName": "Moreno Acosta",
+      "role": "DEPARTMENT_HEAD",
+      "departmentId": "dept-001",
+      "employeeId": "HEAD0002"
+    }
+  ]
+}
