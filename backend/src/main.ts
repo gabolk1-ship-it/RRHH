@@ -8,6 +8,13 @@ import jwt from '@fastify/jwt';
 import cors from '@fastify/cors';
 import { authRoutes } from '@modules/auth/auth.controller';
 import { usersRoutes } from '@modules/users/users.controller';
+import { schedulesRoutes } from '@modules/schedules/schedules.controller';
+import { attendanceRoutes } from '@modules/attendance/attendance.controller';
+import { vacationsRoutes } from '@modules/vacations/vacations.controller';
+import { medicalLeavesRoutes } from '@modules/medical-leaves/medical-leaves.controller';
+import { absencesRoutes } from '@modules/absences/absences.controller';
+import { devicesRoutes } from '@modules/devices/devices.controller';
+import { reportsRoutes } from '@modules/reports/reports.controller';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -95,6 +102,13 @@ async function build(): Promise<FastifyInstance> {
   // Register routes
   await fastify.register(authRoutes);
   await fastify.register(usersRoutes);
+  await fastify.register(schedulesRoutes);
+  await fastify.register(attendanceRoutes);
+  await fastify.register(vacationsRoutes);
+  await fastify.register(medicalLeavesRoutes);
+  await fastify.register(absencesRoutes);
+  await fastify.register(devicesRoutes);
+  await fastify.register(reportsRoutes);
 
   return fastify;
 }
@@ -105,17 +119,14 @@ async function start() {
 
     await fastify.listen({ port: PORT, host: HOST });
 
-    console.log(`
-╔═══════════════════════════════════════════════╗
-║     RRHH - Biometric Attendance System        ║
-║     Server running successfully               ║
-╠═══════════════════════════════════════════════╣
-║  🚀 API: http://${HOST}:${PORT}
-║  📊 Health: http://${HOST}:${PORT}/health
-║  🔐 Auth: POST /api/auth/login
-║  👥 Users: GET /api/users (protected)
-╚═══════════════════════════════════════════════╝
-    `);
+    console.log('RRHH - Sistema de Control de Asistencia Biometrica');
+    console.log('Servidor iniciado correctamente');
+    console.log('----------------------------------------------------');
+    console.log(`API:     http://${HOST}:${PORT}`);
+    console.log(`Health:  http://${HOST}:${PORT}/health`);
+    console.log('Modulos: auth, users, schedules, attendance, vacations,');
+    console.log('         medical-leaves, absences, devices, reports');
+    console.log('----------------------------------------------------');
 
     // Graceful shutdown
     const signals = ['SIGTERM', 'SIGINT'];
