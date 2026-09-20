@@ -56,13 +56,6 @@ async function build(): Promise<FastifyInstance> {
     }
   });
 
-  // Type augmentation for Fastify instance
-  declare module 'fastify' {
-    interface FastifyInstance {
-      authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-    }
-  }
-
   // Global error handler
   fastify.setErrorHandler((error, request, reply) => {
     fastify.log.error(error);
@@ -135,9 +128,7 @@ async function start() {
   }
 }
 
-// Only start if this is the main module
-if (require.main === module) {
-  start();
-}
+// Start the server
+start().catch(console.error);
 
 export { build };
