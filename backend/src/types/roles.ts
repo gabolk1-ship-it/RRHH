@@ -86,9 +86,9 @@ export enum Permission {
   ADMIN_BACKUP = 'admin:backup'
 }
 
-export interface RolePermissions {
+export type RolePermissions = {
   [key in UserRole]: Permission[];
-}
+};
 
 /**
  * Matriz de permisos por rol
@@ -110,7 +110,7 @@ export const ROLE_PERMISSIONS: RolePermissions = {
     Permission.EMPLOYEES_READ,
     Permission.EMPLOYEES_UPDATE,
     Permission.EMPLOYEES_DELETE,
-    Permission.EMPLOYEES_EXPORT,
+    Permission.USERS_EXPORT,
     Permission.USERS_IMPORT,
 
     // Asistencia

@@ -5,8 +5,14 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import { authService } from './auth.service';
-import { usersService } from '@modules/users/users.service';
+import { authService } from './auth.service.prisma';
+import { usersService } from '@modules/users/users.service.prisma';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  }
+}
 
 // Esquemas de validación
 const LoginSchema = z.object({
@@ -89,7 +95,7 @@ export async function authRoutes(fastify: FastifyInstance) {
     try {
       const body = RefreshSchema.parse(request.body);
 
-      const tokens = authService.refreshAccessToken(body.refreshToken);
+      const tokens = await authService.refreshAccessToken(body.refreshToken);
 
       return reply.status(200).send({
         status: 'success',
@@ -107,7 +113,7 @@ export async function authRoutes(fastify: FastifyInstance) {
    * POST /api/auth/logout
    * Logout (en producción: invalidar refresh token en BD)
    */
-  fastify.post('/api/auth/logout', { onRequest: [fastify.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/api/auth/logout', { onRequest: [fastify.authenticate] }, async (_request: FastifyRequest, reply: FastifyReply) => {
     // En producción: invalidar refresh token en BD
     return reply.status(200).send({
       status: 'success',

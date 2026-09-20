@@ -8,8 +8,12 @@ import jwt from '@fastify/jwt';
 import cors from '@fastify/cors';
 import { authRoutes } from '@modules/auth/auth.controller';
 import { usersRoutes } from '@modules/users/users.controller';
-import { authService } from '@modules/auth/auth.service';
-import { JWTPayload } from '@types/roles';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  }
+}
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -45,11 +49,11 @@ async function build(): Promise<FastifyInstance> {
   });
 
   // Extend Fastify with authentication decorator
-  fastify.decorate('authenticate', async function (request: FastifyRequest, reply: FastifyReply) {
+  fastify.decorate('authenticate', async function (request: FastifyRequest, _reply: FastifyReply) {
     try {
       await request.jwtVerify();
-    } catch (error) {
-      return reply.status(401).send({
+    } catch (_error) {
+      return _reply.status(401).send({
         status: 'error',
         message: 'Unauthorized'
       });
@@ -57,7 +61,7 @@ async function build(): Promise<FastifyInstance> {
   });
 
   // Global error handler
-  fastify.setErrorHandler((error, request, reply) => {
+  fastify.setErrorHandler((error, _request, reply) => {
     fastify.log.error(error);
 
     if (error.statusCode === 401) {
@@ -81,7 +85,7 @@ async function build(): Promise<FastifyInstance> {
   });
 
   // Health check endpoint
-  fastify.get('/health', async (request, reply) => {
+  fastify.get('/health', async (_request, reply) => {
     return reply.status(200).send({
       status: 'ok',
       timestamp: new Date().toISOString()

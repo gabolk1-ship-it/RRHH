@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Usuarios - Empleados del sistema
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  firstName     String
+  lastName      String
+  passwordHash  String
+  role          UserRole  @default(EMPLOYEE)
+  active        Boolean   @default(true)
+  departmentId  String?
+  employeeId    String?   @unique
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  attendanceRecords  AttendanceRecord[]
+  schedules          Schedule[]
+  vacations          Vacation[]
+  vacationsApproved  Vacation[]         @relation("Approver")
+  medicalLeaves      MedicalLeave[]
+  medicalApproved    MedicalLeave[]     @relation("MedicalApprover")
+  absences           Absence[]
+  absencesApproved   Absence[]          @relation("AbsenceApprover")
+  auditLogs          AuditLog[]
+
+  @@index([role])
+  @@index([active])
+  @@index([departmentId])
+}
+
+// Registros de asistencia
+model AttendanceRecord {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entryTime DateTime
+  exitTime  DateTime?
+  date      DateTime  @db.Date
+  isManual  Boolean   @default(false)
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([date])
+}
+
+// Horarios y turnos
+model Schedule {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  startTime String    // HH:MM format
+  endTime   String    // HH:MM format
+  monday    Boolean   @default(true)
+  tuesday   Boolean   @default(true)
+  wednesday Boolean   @default(true)
+  thursday  Boolean   @default(true)
+  friday    Boolean   @default(true)
+  saturday  Boolean   @default(false)
+  sunday    Boolean   @default(false)
+  startDate DateTime? @db.Date
+  endDate   DateTime? @db.Date
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+// Solicitudes de vacaciones
+model Vacation {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate    DateTime  @db.Date
+  endDate      DateTime  @db.Date
+  reason       String?
+  status       String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy   String?
+  approver     User?     @relation("Approver", fields: [approvedBy], references: [id])
+  approvalDate DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Permisos médicos
+model MedicalLeave {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate     DateTime  @db.Date
+  startTime     String?   // HH:MM format
+  endDate       DateTime  @db.Date
+  endTime       String?   // HH:MM format
+  reason        String
+  certificateUrl String?
+  status        String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy    String?
+  approver      User?     @relation("MedicalApprover", fields: [approvedBy], references: [id])
+  approvalDate  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Justificaciones de faltas
+model Absence {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  absenceDate   DateTime  @db.Date
+  reason        String
+  documentUrl   String?
+  status        String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy    String?
+  approver      User?     @relation("AbsenceApprover", fields: [approvedBy], references: [id])
+  approvalDate  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// Dispositivos biométricos
+model BiometricDevice {
+  id           String    @id @default(uuid())
+  name         String
+  deviceType   String    // FINGERPRINT, FACIAL_RECOGNITION, etc
+  serialNumber String?   @unique
+  ipAddress    String?
+  location     String?
+  status       String    @default("ACTIVE")
+  lastSync     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+// Registro de auditoría
+model AuditLog {
+  id         String    @id @default(uuid())
+  userId     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  action     String
+  entityType String?
+  entityId   String?
+  changes    Json?
+  ipAddress  String?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Enums
+enum UserRole {
+  ADMIN
+  HR_MANAGER
+  DEPARTMENT_HEAD
+  SUPERVISOR
+  EMPLOYEE
+}

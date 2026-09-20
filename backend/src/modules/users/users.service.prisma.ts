@@ -1,8 +1,9 @@
 /**
- * Users Service
- * Gestión de usuarios, migración y permisos
+ * Users Service (Prisma - Database)
+ * Gestión de usuarios con Prisma ORM y PostgreSQL
  */
 
+import { prisma } from '../../lib/prisma';
 import { UserRole, ROLE_PERMISSIONS, Permission } from '../../types/roles';
 import bcrypt from 'bcryptjs';
 
@@ -50,16 +51,15 @@ export interface ImportResult {
   users: UserDTO[];
 }
 
-// Mock en-memory database
-const usersDatabase = new Map<string, any>();
-
 export class UsersService {
   /**
    * Crear un usuario individual
    */
   async createUser(data: CreateUserDTO): Promise<UserDTO> {
     // Validar email único
-    const existingUser = Array.from(usersDatabase.values()).find(u => u.email === data.email);
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
     if (existingUser) {
       throw new Error(`Usuario con email ${data.email} ya existe`);
     }
@@ -69,46 +69,30 @@ export class UsersService {
       throw new Error(`Rol ${data.role} no válido`);
     }
 
-    // Hash de contraseña (generar aleatorio si no se proporciona)
+    // Hash de contraseña
     const password = data.password || this.generateTemporaryPassword();
     const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '10', 10);
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     // Crear usuario
-    const user = {
-      id: crypto.randomUUID(),
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      role: data.role,
-      permissions: ROLE_PERMISSIONS[data.role],
-      passwordHash,
-      active: true,
-      departmentId: data.departmentId,
-      employeeId: data.employeeId,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        passwordHash,
+        role: data.role,
+        departmentId: data.departmentId,
+        employeeId: data.employeeId,
+        active: true,
+      },
+    });
 
-    // Guardar en "BD"
-    usersDatabase.set(user.id, user);
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    return this.mapUserToDTO(user);
   }
 
   /**
-   * Importación masiva de usuarios (CSV/Excel parseado)
-   * Ideal para migración de sistemas antiguos
+   * Importación masiva de usuarios
    */
   async importMultipleUsers(users: BulkUserImportDTO[]): Promise<ImportResult> {
     const result: ImportResult = {
@@ -116,7 +100,7 @@ export class UsersService {
       successful: 0,
       failed: 0,
       errors: [],
-      users: []
+      users: [],
     };
 
     for (let i = 0; i < users.length; i++) {
@@ -133,7 +117,9 @@ export class UsersService {
         }
 
         // Verificar email único
-        const existing = Array.from(usersDatabase.values()).find(u => u.email === userData.email);
+        const existing = await prisma.user.findUnique({
+          where: { email: userData.email },
+        });
         if (existing) {
           throw new Error('Email ya existe en el sistema');
         }
@@ -146,18 +132,17 @@ export class UsersService {
           password: userData.password || this.generateTemporaryPassword(),
           role: userData.role,
           departmentId: userData.departmentId,
-          employeeId: userData.employeeId
+          employeeId: userData.employeeId,
         });
 
         result.users.push(user);
         result.successful++;
-
       } catch (error) {
         result.failed++;
         result.errors.push({
           row: i + 1,
           email: users[i].email,
-          error: error instanceof Error ? error.message : 'Error desconocido'
+          error: error instanceof Error ? error.message : 'Error desconocido',
         });
       }
     }
@@ -169,81 +154,57 @@ export class UsersService {
    * Obtener usuario por ID
    */
   async getUserById(id: string): Promise<UserDTO | null> {
-    const user = usersDatabase.get(id);
-    if (!user) {
-      return null;
-    }
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+    return user ? this.mapUserToDTO(user) : null;
   }
 
   /**
    * Obtener usuario por email
    */
   async getUserByEmail(email: string): Promise<UserDTO | null> {
-    const user = Array.from(usersDatabase.values()).find(u => u.email === email);
-    if (!user) {
-      return null;
-    }
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+    return user ? this.mapUserToDTO(user) : null;
   }
 
   /**
    * Listar todos los usuarios
    */
   async listUsers(limit = 100, offset = 0): Promise<{ users: UserDTO[]; total: number }> {
-    const allUsers = Array.from(usersDatabase.values());
-    const total = allUsers.length;
-    const users = allUsers.slice(offset, offset + limit).map(user => ({
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    }));
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        take: limit,
+        skip: offset,
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.user.count(),
+    ]);
 
-    return { users, total };
+    return {
+      users: users.map(user => this.mapUserToDTO(user)),
+      total,
+    };
   }
 
   /**
    * Actualizar usuario
    */
   async updateUser(id: string, updates: Partial<CreateUserDTO>): Promise<UserDTO> {
-    const user = usersDatabase.get(id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
     if (!user) {
       throw new Error('Usuario no encontrado');
     }
 
     // Validar cambio de email
     if (updates.email && updates.email !== user.email) {
-      const existing = Array.from(usersDatabase.values()).find(
-        u => u.email === updates.email && u.id !== id
-      );
+      const existing = await prisma.user.findUnique({
+        where: { email: updates.email },
+      });
       if (existing) {
         throw new Error('Email ya existe en el sistema');
       }
@@ -254,33 +215,25 @@ export class UsersService {
       throw new Error(`Rol ${updates.role} no válido`);
     }
 
-    // Actualizar campos
-    if (updates.email) user.email = updates.email;
-    if (updates.firstName) user.firstName = updates.firstName;
-    if (updates.lastName) user.lastName = updates.lastName;
-    if (updates.role) {
-      user.role = updates.role;
-      user.permissions = ROLE_PERMISSIONS[updates.role];
-    }
+    // Preparar datos para actualizar
+    const updateData: any = {};
+    if (updates.email) updateData.email = updates.email;
+    if (updates.firstName) updateData.firstName = updates.firstName;
+    if (updates.lastName) updateData.lastName = updates.lastName;
+    if (updates.role) updateData.role = updates.role;
+
     if (updates.password) {
       const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '10', 10);
-      user.passwordHash = await bcrypt.hash(updates.password, saltRounds);
+      updateData.passwordHash = await bcrypt.hash(updates.password, saltRounds);
     }
-    user.updatedAt = new Date();
 
-    usersDatabase.set(id, user);
+    // Actualizar
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: updateData,
+    });
 
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    return this.mapUserToDTO(updatedUser);
   }
 
   /**
@@ -294,73 +247,76 @@ export class UsersService {
    * Desactivar usuario
    */
   async deactivateUser(id: string): Promise<UserDTO> {
-    const user = usersDatabase.get(id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
     if (!user) {
       throw new Error('Usuario no encontrado');
     }
 
-    user.active = false;
-    user.updatedAt = new Date();
-    usersDatabase.set(id, user);
+    const deactivated = await prisma.user.update({
+      where: { id },
+      data: { active: false },
+    });
 
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    return this.mapUserToDTO(deactivated);
   }
 
   /**
    * Reactivar usuario
    */
   async activateUser(id: string): Promise<UserDTO> {
-    const user = usersDatabase.get(id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
     if (!user) {
       throw new Error('Usuario no encontrado');
     }
 
-    user.active = true;
-    user.updatedAt = new Date();
-    usersDatabase.set(id, user);
+    const activated = await prisma.user.update({
+      where: { id },
+      data: { active: true },
+    });
 
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      permissions: user.permissions,
-      active: user.active,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
-    };
+    return this.mapUserToDTO(activated);
   }
 
   /**
    * Listar usuarios por rol
    */
   async getUsersByRole(role: UserRole): Promise<UserDTO[]> {
-    const users = Array.from(usersDatabase.values())
-      .filter(u => u.role === role)
-      .map(user => ({
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-        permissions: user.permissions,
-        active: user.active,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }));
+    const users = await prisma.user.findMany({
+      where: { role },
+    });
 
-    return users;
+    return users.map(user => this.mapUserToDTO(user));
+  }
+
+  /**
+   * Obtener usuario con contraseña (para login)
+   */
+  async getUserByEmailWithPassword(email: string) {
+    return prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
+  /**
+   * Mapear usuario de BD a DTO
+   */
+  private mapUserToDTO(user: any): UserDTO {
+    const userRole = user.role as UserRole;
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: userRole,
+      permissions: ROLE_PERMISSIONS[userRole],
+      active: user.active,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 
   /**

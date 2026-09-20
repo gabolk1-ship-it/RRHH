@@ -5,8 +5,14 @@
 
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import { usersService, CreateUserDTO, BulkUserImportDTO } from './users.service';
-import { Permission, UserRole } from '@types/roles';
+import { usersService, CreateUserDTO, BulkUserImportDTO } from './users.service.prisma';
+import { Permission, UserRole } from '../../types/roles';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    authenticate(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  }
+}
 
 // Esquemas de validación
 const CreateUserSchema = z.object({

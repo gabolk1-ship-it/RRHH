@@ -1,26 +1,29 @@
 /**
- * Auth Service
- * Maneja autenticación, JWT y validación de tokens
+ * Auth Service (Prisma - Database)
+ * Autenticación con JWT usando Prisma ORM y PostgreSQL
  */
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { prisma } from '../../lib/prisma';
 import { JWTPayload, UserRole, ROLE_PERMISSIONS } from '../../types/roles';
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  passwordHash: string;
-  role: UserRole;
-  active: boolean;
-}
 
 interface AuthToken {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
+}
+
+interface AuthResponse {
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    active: boolean;
+  };
+  tokens: AuthToken;
 }
 
 export class AuthService {
@@ -30,34 +33,50 @@ export class AuthService {
   /**
    * Registrar nuevo usuario
    */
-  async register(email: string, password: string, firstName: string, lastName: string, role: UserRole = UserRole.EMPLOYEE): Promise<User> {
+  async register(email: string, password: string, firstName: string, lastName: string, role: UserRole = UserRole.EMPLOYEE): Promise<any> {
     // Validar que email no exista
-    // En producción: consultar BD
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new Error(`Usuario con email ${email} ya existe`);
+    }
 
     // Hash de la contraseña
     const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '10', 10);
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    // Crear usuario (en producción: guardar en BD)
-    const user: User = {
-      id: crypto.randomUUID(),
-      email,
-      firstName,
-      lastName,
-      passwordHash,
-      role,
-      active: true
-    };
+    // Crear usuario en BD
+    const user = await prisma.user.create({
+      data: {
+        email,
+        firstName,
+        lastName,
+        passwordHash,
+        role,
+        active: true,
+      },
+    });
 
-    return user;
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      active: user.active,
+    };
   }
 
   /**
    * Login de usuario - Genera tokens JWT
    */
-  async login(email: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; tokens: AuthToken }> {
-    // En producción: obtener usuario de la BD
-    const user = await this.getUserByEmail(email);
+  async login(email: string, password: string): Promise<AuthResponse> {
+    // Obtener usuario de la BD
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
     if (!user || !user.active) {
       throw new Error('Invalid credentials or user inactive');
@@ -69,60 +88,65 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
-    // Generar tokens
-    const tokens = this.generateTokens(user);
+    // Actualizar último login
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLogin: new Date() },
+    });
 
-    // En producción: guardar refresh token en BD y actualizar last_login
+    // Generar tokens
+    const tokens = this.generateTokens(user.id, user.email, user.role as UserRole);
+
     return {
       user: {
         id: user.id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        role: user.role,
-        active: user.active
+        role: user.role as UserRole,
+        active: user.active,
       },
-      tokens
+      tokens,
     };
   }
 
   /**
    * Generar tokens JWT (Access + Refresh)
    */
-  generateTokens(user: User): AuthToken {
+  generateTokens(userId: string, email: string, role: UserRole): AuthToken {
     // Obtener permisos del rol
-    const permissions = ROLE_PERMISSIONS[user.role];
+    const permissions = ROLE_PERMISSIONS[role];
 
     // Access Token - corta duración
     const accessPayload: JWTPayload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
+      sub: userId,
+      email: email,
+      role: role,
       permissions,
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 15 * 60 // 15 minutos
+      exp: Math.floor(Date.now() / 1000) + 15 * 60, // 15 minutos
     };
 
     const accessToken = jwt.sign(accessPayload, this.jwtSecret, {
-      algorithm: 'HS256'
+      algorithm: 'HS256',
     });
 
     // Refresh Token - larga duración
     const refreshPayload = {
-      sub: user.id,
+      sub: userId,
       type: 'refresh',
       iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // 7 días
+      exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // 7 días
     };
 
     const refreshToken = jwt.sign(refreshPayload, this.jwtRefreshSecret, {
-      algorithm: 'HS256'
+      algorithm: 'HS256',
     });
 
     return {
       accessToken,
       refreshToken,
-      expiresIn: 15 * 60 // 15 minutos en segundos
+      expiresIn: 15 * 60, // 15 minutos en segundos
     };
   }
 
@@ -132,7 +156,7 @@ export class AuthService {
   verifyAccessToken(token: string): JWTPayload {
     try {
       const decoded = jwt.verify(token, this.jwtSecret, {
-        algorithms: ['HS256']
+        algorithms: ['HS256'],
       }) as JWTPayload;
 
       return decoded;
@@ -144,36 +168,43 @@ export class AuthService {
   /**
    * Refrescar Access Token usando Refresh Token
    */
-  refreshAccessToken(refreshToken: string): { accessToken: string; expiresIn: number } {
+  async refreshAccessToken(refreshToken: string): Promise<{ accessToken: string; expiresIn: number }> {
     try {
       const decoded = jwt.verify(refreshToken, this.jwtRefreshSecret, {
-        algorithms: ['HS256']
+        algorithms: ['HS256'],
       }) as any;
 
       if (decoded.type !== 'refresh') {
         throw new Error('Invalid token type');
       }
 
-      // Obtener usuario y generar nuevo access token
-      // En producción: obtener de BD
-      const user = { id: decoded.sub } as any;
+      // Obtener usuario de BD
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.sub },
+      });
 
+      if (!user || !user.active) {
+        throw new Error('User not found or inactive');
+      }
+
+      // Generar nuevo access token
+      const userRole = user.role as UserRole;
       const newAccessPayload: JWTPayload = {
         sub: user.id,
         email: user.email,
-        role: user.role,
-        permissions: user.permissions,
+        role: userRole,
+        permissions: ROLE_PERMISSIONS[userRole],
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 15 * 60
+        exp: Math.floor(Date.now() / 1000) + 15 * 60,
       };
 
       const accessToken = jwt.sign(newAccessPayload, this.jwtSecret, {
-        algorithm: 'HS256'
+        algorithm: 'HS256',
       });
 
       return {
         accessToken,
-        expiresIn: 15 * 60
+        expiresIn: 15 * 60,
       };
     } catch (error) {
       throw new Error('Invalid refresh token');
@@ -202,23 +233,25 @@ export class AuthService {
   }
 
   /**
-   * Mock: Obtener usuario por email (en producción desde BD)
+   * Obtener usuario por ID
    */
-  private async getUserByEmail(email: string): Promise<User | null> {
-    // En producción: consultar BD
-    // Por ahora retorna un usuario de demo
-    if (email === 'admin@hospital.ec') {
-      return {
-        id: 'admin-1',
-        email: 'admin@hospital.ec',
-        firstName: 'Admin',
-        lastName: 'System',
-        passwordHash: await bcrypt.hash('admin123', 10),
-        role: UserRole.ADMIN,
-        active: true
-      };
-    }
-    return null;
+  async getUserById(userId: string): Promise<any | null> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) return null;
+
+    const userRole = user.role as UserRole;
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: userRole,
+      active: user.active,
+      permissions: ROLE_PERMISSIONS[userRole],
+    };
   }
 }
 
