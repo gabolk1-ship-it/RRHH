@@ -1,4 +1,4 @@
-# 🏗️ Arquitectura del Sistema - Control Biométrico Hospital
+# Arquitectura del Sistema - Control Biométrico Hospital
 
 ## Índice
 1. [Visión General](#visión-general)
@@ -374,13 +374,13 @@ Retención: Mínimo 7 años (cumplimiento legal)
 ### 5. **Compliance**
 
 ```
-✓ Ecuador:
+Ecuador:
   - Código del Trabajo
   - IESS (aportes)
   - SRI (impuestos)
   - Regulaciones de datos personales
 
-✓ OWASP Top 10:
+OWASP Top 10:
   - Injection prevention
   - Broken authentication
   - Sensitive data exposure
@@ -522,10 +522,10 @@ Device Sync:
 ## Roadmap Arquitectónico
 
 ### v1.0 (MVP)
-- ✅ Asistencia básica
-- ✅ Huella dactilar
-- ✅ Reportes simples
-- ✅ Gestión de horarios
+- Asistencia básica
+- Huella dactilar
+- Reportes simples
+- Gestión de horarios
 
 ### v1.1
 - Reconocimiento facial

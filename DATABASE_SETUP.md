@@ -1,4 +1,4 @@
-# 🗄️ Configuración de Base de Datos PostgreSQL
+# Configuración de Base de Datos PostgreSQL
 
 ## Inicio Rápido (Docker Compose)
 
@@ -6,7 +6,7 @@
 - Docker instalado
 - Docker Compose v3.8+
 
-### 1️⃣ Levantar la Base de Datos
+### Paso 1: Levantar la Base de Datos
 
 ```bash
 # Desde la carpeta raíz del proyecto
@@ -14,11 +14,11 @@ docker-compose up -d
 ```
 
 **Esto inicia:**
-- ✅ PostgreSQL 15 en puerto 5432
-- ✅ pgAdmin (UI visual) en puerto 5050
-- ✅ Volumen persistente para datos
+- PostgreSQL 15 en puerto 5432
+- pgAdmin (UI visual) en puerto 5050
+- Volumen persistente para datos
 
-### 2️⃣ Verificar Estado
+### Paso 2: Verificar Estado
 
 ```bash
 # Ver logs
@@ -33,7 +33,7 @@ Esperado:
 STATUS: Up (healthy)
 ```
 
-### 3️⃣ Crear archivo .env
+### Paso 3: Crear archivo .env
 
 ```bash
 cp backend/.env.example backend/.env
@@ -45,7 +45,7 @@ DATABASE_URL=postgresql://rrhh_user:rrhh_password_dev@localhost:5432/rrhh_db
 JWT_SECRET=dev-secret-key-change-in-production
 ```
 
-### 4️⃣ Conectar desde la Aplicación
+### Paso 4: Conectar desde la Aplicación
 
 El servidor se conectará automáticamente a PostgreSQL en startup.
 
@@ -56,7 +56,7 @@ npm run dev
 
 ---
 
-## 📊 Acceder a pgAdmin (UI Visual)
+## Acceder a pgAdmin (UI Visual)
 
 **URL:** http://localhost:5050
 
@@ -76,7 +76,7 @@ npm run dev
 
 ---
 
-## 🔧 Comandos Útiles
+## Comandos Útiles
 
 ### Ver contenedores
 ```bash
@@ -113,32 +113,32 @@ SELECT * FROM users;
 docker-compose down
 ```
 
-### Detener Y eliminar datos (⚠️ cuidado!)
+### Detener y eliminar datos (destructivo)
 ```bash
 docker-compose down -v
 ```
 
 ---
 
-## 🐘 Estructura de Base de Datos
+## Estructura de Base de Datos
 
 ### Tablas principales:
 ```
-✅ users              - Empleados del sistema
-✅ attendance_records - Registros de entrada/salida
-✅ schedules         - Horarios y turnos
-✅ vacations         - Solicitudes de vacaciones
-✅ medical_leaves    - Permisos médicos
-✅ absences          - Justificaciones de faltas
-✅ biometric_devices - Dispositivos biométricos
-✅ audit_logs        - Registro de auditoría
-✅ permissions       - Matriz de permisos
-✅ role_permissions  - Permisos por rol
+users              - Empleados del sistema
+attendance_records - Registros de entrada/salida
+schedules         - Horarios y turnos
+vacations         - Solicitudes de vacaciones
+medical_leaves    - Permisos médicos
+absences          - Justificaciones de faltas
+biometric_devices - Dispositivos biométricos
+audit_logs        - Registro de auditoría
+permissions       - Matriz de permisos
+role_permissions  - Permisos por rol
 ```
 
 ---
 
-## 🚀 Datos Iniciales
+## Datos Iniciales
 
 ### Usuario Admin Predeterminado
 ```
@@ -157,7 +157,7 @@ curl -X POST http://localhost:3000/api/users/import \
 
 ---
 
-## 🔄 Backup y Restore
+## Backup y Restore
 
 ### Hacer backup
 ```bash
@@ -171,7 +171,7 @@ docker exec -i rrhh-postgres psql -U rrhh_user -d rrhh_db < backup.sql
 
 ---
 
-## ❓ Troubleshooting
+## Troubleshooting
 
 ### Puerto 5432 ya está en uso
 ```bash
@@ -195,17 +195,19 @@ docker logs rrhh-postgres
 
 ---
 
-## 📝 Próximos Pasos
+## Estado
 
-1. ✅ Docker Compose levantado
-2. ⏳ Conectar ORM (Prisma)
-3. ⏳ Reemplazar mock database
-4. ⏳ Crear migraciones automáticas
-5. ⏳ Seeders de datos de prueba
+1. Docker Compose configurado
+2. ORM (Prisma) integrado en el backend
+3. Servicios de negocio conectados a la base de datos vía Prisma
+4. Migraciones definidas en `backend/prisma/schema.prisma`
+5. Script de datos de prueba en `backend/scripts/seed.ts`
+
+Pendiente: ejecutar `docker-compose up -d` y `npx prisma migrate dev` contra una base de datos real (no probado en este entorno por falta de Docker).
 
 ---
 
-## 🔐 Producción
+## Producción
 
 Para producción (Google Cloud SQL, AWS RDS, etc.):
 

@@ -14,15 +14,15 @@ El sistema RRHH implementa un modelo de Control de Acceso Basado en Roles (RBAC)
 
 ```
 Puede:
-✅ Crear, leer, actualizar, eliminar cualquier usuario
-✅ Asignar roles y permisos
-✅ Importar usuarios masivamente
-✅ Visualizar auditoría completa
-✅ Acceder al panel de administración
-✅ Configurar dispositivos biométricos
-✅ Generar reportes personalizados
-✅ Realizar backups
-✅ Gestionar todos los aspectos del sistema
+Crear, leer, actualizar, eliminar cualquier usuario
+Asignar roles y permisos
+Importar usuarios masivamente
+Visualizar auditoría completa
+Acceder al panel de administración
+Configurar dispositivos biométricos
+Generar reportes personalizados
+Realizar backups
+Gestionar todos los aspectos del sistema
 ```
 
 ---
@@ -33,22 +33,22 @@ Puede:
 
 ```
 Puede:
-✅ Crear, leer, actualizar, eliminar empleados
-✅ Importar usuarios masivamente (migración)
-✅ Registrar asistencia manual
-✅ Corregir registros de asistencia
-✅ Crear y gestionar horarios/turnos
-✅ Aprobar vacaciones y permisos médicos
-✅ Visualizar ausencias y justificaciones
-✅ Generar reportes de asistencia
-✅ Ver auditoría del sistema
-✅ Autenticación y logout
+Crear, leer, actualizar, eliminar empleados
+Importar usuarios masivamente (migración)
+Registrar asistencia manual
+Corregir registros de asistencia
+Crear y gestionar horarios/turnos
+Aprobar vacaciones y permisos médicos
+Visualizar ausencias y justificaciones
+Generar reportes de asistencia
+Ver auditoría del sistema
+Autenticación y logout
 
 No puede:
-❌ Crear otros ADMIN
-❌ Cambiar su propio rol
-❌ Acceder a panel de administración
-❌ Configurar dispositivos biométricos
+Crear otros ADMIN
+Cambiar su propio rol
+Acceder a panel de administración
+Configurar dispositivos biométricos
 ```
 
 ---
@@ -59,22 +59,22 @@ No puede:
 
 ```
 Puede:
-✅ Leer empleados del departamento
-✅ Ver asistencia del equipo
-✅ Corregir asistencia del equipo
-✅ Aprobar vacaciones del equipo
-✅ Rechazar vacaciones del equipo
-✅ Ver y aprobar permisos médicos
-✅ Ver y aprobar justificaciones
-✅ Generar reportes del departamento
-✅ Autenticación y logout
+Leer empleados del departamento
+Ver asistencia del equipo
+Corregir asistencia del equipo
+Aprobar vacaciones del equipo
+Rechazar vacaciones del equipo
+Ver y aprobar permisos médicos
+Ver y aprobar justificaciones
+Generar reportes del departamento
+Autenticación y logout
 
 No puede:
-❌ Crear nuevos empleados
-❌ Eliminar empleados
-❌ Cambiar roles
-❌ Importar usuarios
-❌ Registrar asistencia manual
+Crear nuevos empleados
+Eliminar empleados
+Cambiar roles
+Importar usuarios
+Registrar asistencia manual
 ```
 
 ---
@@ -85,21 +85,21 @@ No puede:
 
 ```
 Puede:
-✅ Leer empleados asignados
-✅ Ver asistencia propia y del equipo
-✅ Ver vacaciones del equipo
-✅ Aprobar vacaciones menores
-✅ Ver permisos médicos
-✅ Ver y aprobar justificaciones
-✅ Generar reportes básicos
-✅ Autenticación y logout
+Leer empleados asignados
+Ver asistencia propia y del equipo
+Ver vacaciones del equipo
+Aprobar vacaciones menores
+Ver permisos médicos
+Ver y aprobar justificaciones
+Generar reportes básicos
+Autenticación y logout
 
 No puede:
-❌ Crear o eliminar empleados
-❌ Registrar asistencia
-❌ Cambiar roles
-❌ Importar usuarios
-❌ Acceder a datos de otros departamentos
+Crear o eliminar empleados
+Registrar asistencia
+Cambiar roles
+Importar usuarios
+Acceder a datos de otros departamentos
 ```
 
 ---
@@ -110,20 +110,20 @@ No puede:
 
 ```
 Puede:
-✅ Ver su propio perfil
-✅ Ver su propia asistencia
-✅ Solicitar vacaciones
-✅ Solicitar permiso médico
-✅ Solicitar justificación de falta
-✅ Ver reportes propios
-✅ Autenticación y logout
+Ver su propio perfil
+Ver su propia asistencia
+Solicitar vacaciones
+Solicitar permiso médico
+Solicitar justificación de falta
+Ver reportes propios
+Autenticación y logout
 
 No puede:
-❌ Ver datos de otros empleados
-❌ Aprobar solicitudes
-❌ Generar reportes
-❌ Acceder a datos del departamento
-❌ Cambiar su rol
+Ver datos de otros empleados
+Aprobar solicitudes
+Generar reportes
+Acceder a datos del departamento
+Cambiar su rol
 ```
 
 ---
@@ -133,65 +133,65 @@ No puede:
 | Permiso | Descripción | ADMIN | HR_MGR | DEPT_HEAD | SUPERVISOR | EMPLOYEE |
 |---------|-------------|:-----:|:------:|:---------:|:----------:|:--------:|
 | **AUTENTICACIÓN** |
-| AUTH_LOGIN | Iniciar sesión | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AUTH_LOGOUT | Cerrar sesión | ✅ | ✅ | ✅ | ✅ | ✅ |
-| AUTH_2FA | Autenticación de dos factores | ✅ | ❌ | ❌ | ❌ | ❌ |
+| AUTH_LOGIN | Iniciar sesión | X | X | X | X | X |
+| AUTH_LOGOUT | Cerrar sesión | X | X | X | X | X |
+| AUTH_2FA | Autenticación de dos factores | X | - | - | - | - |
 | **GESTIÓN DE USUARIOS** |
-| USERS_CREATE | Crear usuarios | ✅ | ❌ | ❌ | ❌ | ❌ |
-| USERS_READ | Leer usuarios | ✅ | ✅ | ✅ | ✅ | ✅ |
-| USERS_UPDATE | Actualizar usuarios | ✅ | ✅ | ❌ | ❌ | ❌ |
-| USERS_DELETE | Eliminar/desactivar usuarios | ✅ | ✅ | ❌ | ❌ | ❌ |
-| USERS_EXPORT | Exportar datos de usuarios | ✅ | ✅ | ❌ | ❌ | ❌ |
-| USERS_IMPORT | Importar usuarios (migración) | ✅ | ✅ | ❌ | ❌ | ❌ |
+| USERS_CREATE | Crear usuarios | X | - | - | - | - |
+| USERS_READ | Leer usuarios | X | X | X | X | X |
+| USERS_UPDATE | Actualizar usuarios | X | X | - | - | - |
+| USERS_DELETE | Eliminar/desactivar usuarios | X | X | - | - | - |
+| USERS_EXPORT | Exportar datos de usuarios | X | X | - | - | - |
+| USERS_IMPORT | Importar usuarios (migración) | X | X | - | - | - |
 | **GESTIÓN DE EMPLEADOS** |
-| EMPLOYEES_CREATE | Crear empleados | ✅ | ✅ | ❌ | ❌ | ❌ |
-| EMPLOYEES_READ | Leer empleados | ✅ | ✅ | ✅ | ✅ | ✅ |
-| EMPLOYEES_UPDATE | Actualizar empleados | ✅ | ✅ | ❌ | ❌ | ❌ |
-| EMPLOYEES_DELETE | Eliminar empleados | ✅ | ✅ | ❌ | ❌ | ❌ |
-| EMPLOYEES_VIEW_BIOMETRIC | Ver datos biométricos | ✅ | ✅ | ❌ | ❌ | ❌ |
+| EMPLOYEES_CREATE | Crear empleados | X | X | - | - | - |
+| EMPLOYEES_READ | Leer empleados | X | X | X | X | X |
+| EMPLOYEES_UPDATE | Actualizar empleados | X | X | - | - | - |
+| EMPLOYEES_DELETE | Eliminar empleados | X | X | - | - | - |
+| EMPLOYEES_VIEW_BIOMETRIC | Ver datos biométricos | X | X | - | - | - |
 | **GESTIÓN DE ROLES** |
-| ROLES_MANAGE | Gestionar roles y permisos | ✅ | ❌ | ❌ | ❌ | ❌ |
-| ROLES_ASSIGN | Asignar roles a usuarios | ✅ | ✅ | ❌ | ❌ | ❌ |
+| ROLES_MANAGE | Gestionar roles y permisos | X | - | - | - | - |
+| ROLES_ASSIGN | Asignar roles a usuarios | X | X | - | - | - |
 | **ASISTENCIA** |
-| ATTENDANCE_VIEW | Ver registros de asistencia | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ATTENDANCE_RECORD | Registrar asistencia (biométrica) | ✅ | ✅ | ❌ | ❌ | ❌ |
-| ATTENDANCE_MANUAL | Registrar asistencia manual | ✅ | ✅ | ❌ | ❌ | ❌ |
-| ATTENDANCE_CORRECT | Corregir registros de asistencia | ✅ | ✅ | ✅ | ❌ | ❌ |
-| ATTENDANCE_EXPORT | Exportar registros de asistencia | ✅ | ✅ | ❌ | ❌ | ❌ |
+| ATTENDANCE_VIEW | Ver registros de asistencia | X | X | X | X | X |
+| ATTENDANCE_RECORD | Registrar asistencia (biométrica) | X | X | - | - | - |
+| ATTENDANCE_MANUAL | Registrar asistencia manual | X | X | - | - | - |
+| ATTENDANCE_CORRECT | Corregir registros de asistencia | X | X | X | - | - |
+| ATTENDANCE_EXPORT | Exportar registros de asistencia | X | X | - | - | - |
 | **DISPOSITIVOS BIOMÉTRICOS** |
-| DEVICES_MANAGE | Gestionar dispositivos biométricos | ✅ | ❌ | ❌ | ❌ | ❌ |
-| DEVICES_SYNC | Sincronizar dispositivos | ✅ | ❌ | ❌ | ❌ | ❌ |
-| DEVICES_CONFIG | Configurar dispositivos | ✅ | ❌ | ❌ | ❌ | ❌ |
+| DEVICES_MANAGE | Gestionar dispositivos biométricos | X | - | - | - | - |
+| DEVICES_SYNC | Sincronizar dispositivos | X | - | - | - | - |
+| DEVICES_CONFIG | Configurar dispositivos | X | - | - | - | - |
 | **HORARIOS Y TURNOS** |
-| SCHEDULES_CREATE | Crear horarios | ✅ | ✅ | ❌ | ❌ | ❌ |
-| SCHEDULES_READ | Ver horarios | ✅ | ✅ | ✅ | ✅ | ✅ |
-| SCHEDULES_UPDATE | Actualizar horarios | ✅ | ✅ | ❌ | ❌ | ❌ |
-| SCHEDULES_DELETE | Eliminar horarios | ✅ | ✅ | ❌ | ❌ | ❌ |
+| SCHEDULES_CREATE | Crear horarios | X | X | - | - | - |
+| SCHEDULES_READ | Ver horarios | X | X | X | X | X |
+| SCHEDULES_UPDATE | Actualizar horarios | X | X | - | - | - |
+| SCHEDULES_DELETE | Eliminar horarios | X | X | - | - | - |
 | **VACACIONES** |
-| VACATIONS_REQUEST | Solicitar vacaciones | ✅ | ✅ | ✅ | ✅ | ✅ |
-| VACATIONS_APPROVE | Aprobar vacaciones | ✅ | ✅ | ✅ | ✅ | ❌ |
-| VACATIONS_REJECT | Rechazar vacaciones | ✅ | ✅ | ✅ | ✅ | ❌ |
-| VACATIONS_VIEW | Ver vacaciones | ✅ | ✅ | ✅ | ✅ | ✅ |
+| VACATIONS_REQUEST | Solicitar vacaciones | X | X | X | X | X |
+| VACATIONS_APPROVE | Aprobar vacaciones | X | X | X | X | - |
+| VACATIONS_REJECT | Rechazar vacaciones | X | X | X | X | - |
+| VACATIONS_VIEW | Ver vacaciones | X | X | X | X | X |
 | **PERMISOS MÉDICOS** |
-| MEDICAL_LEAVES_REQUEST | Solicitar permiso médico | ✅ | ✅ | ✅ | ✅ | ✅ |
-| MEDICAL_LEAVES_APPROVE | Aprobar permiso médico | ✅ | ✅ | ✅ | ✅ | ❌ |
-| MEDICAL_LEAVES_VIEW | Ver permisos médicos | ✅ | ✅ | ✅ | ✅ | ✅ |
+| MEDICAL_LEAVES_REQUEST | Solicitar permiso médico | X | X | X | X | X |
+| MEDICAL_LEAVES_APPROVE | Aprobar permiso médico | X | X | X | X | - |
+| MEDICAL_LEAVES_VIEW | Ver permisos médicos | X | X | X | X | X |
 | **JUSTIFICACIONES** |
-| ABSENCES_REQUEST | Solicitar justificación | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ABSENCES_APPROVE | Aprobar justificación | ✅ | ✅ | ✅ | ✅ | ❌ |
-| ABSENCES_VIEW | Ver justificaciones | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ABSENCES_REQUEST | Solicitar justificación | X | X | X | X | X |
+| ABSENCES_APPROVE | Aprobar justificación | X | X | X | X | - |
+| ABSENCES_VIEW | Ver justificaciones | X | X | X | X | X |
 | **REPORTES** |
-| REPORTS_VIEW | Ver reportes | ✅ | ✅ | ✅ | ✅ | ✅ |
-| REPORTS_GENERATE | Generar reportes | ✅ | ✅ | ✅ | ✅ | ❌ |
-| REPORTS_EXPORT | Exportar reportes | ✅ | ✅ | ❌ | ❌ | ❌ |
-| REPORTS_CUSTOM | Crear reportes personalizados | ✅ | ✅ | ❌ | ❌ | ❌ |
+| REPORTS_VIEW | Ver reportes | X | X | X | X | X |
+| REPORTS_GENERATE | Generar reportes | X | X | X | X | - |
+| REPORTS_EXPORT | Exportar reportes | X | X | - | - | - |
+| REPORTS_CUSTOM | Crear reportes personalizados | X | X | - | - | - |
 | **AUDITORÍA** |
-| AUDIT_VIEW | Ver logs de auditoría | ✅ | ✅ | ❌ | ❌ | ❌ |
-| AUDIT_EXPORT | Exportar auditoría | ✅ | ✅ | ❌ | ❌ | ❌ |
+| AUDIT_VIEW | Ver logs de auditoría | X | X | - | - | - |
+| AUDIT_EXPORT | Exportar auditoría | X | X | - | - | - |
 | **ADMINISTRACIÓN** |
-| ADMIN_PANEL | Acceder panel de administración | ✅ | ❌ | ❌ | ❌ | ❌ |
-| ADMIN_CONFIG | Configurar sistema | ✅ | ❌ | ❌ | ❌ | ❌ |
-| ADMIN_BACKUP | Realizar backups | ✅ | ❌ | ❌ | ❌ | ❌ |
+| ADMIN_PANEL | Acceder panel de administración | X | - | - | - | - |
+| ADMIN_CONFIG | Configurar sistema | X | - | - | - | - |
+| ADMIN_BACKUP | Realizar backups | X | - | - | - | - |
 
 ---
 
@@ -204,7 +204,7 @@ Usuario → Login (email/password) → JWT Token → Incluye rol + permisos
 
 ### 2. Verificación de Permisos
 ```
-Request → Middleware → Valida JWT → Verifica permiso → ✅ Acceso o ❌ Rechaza
+Request → Middleware → Valida JWT → Verifica permiso → Acceso o Rechaza
 ```
 
 ### 3. Asignación de Permisos en Importación
@@ -325,7 +325,7 @@ curl -X POST http://localhost:3000/api/users/user-123/role \
    ↓
 2. JWT generado con: role: "HR_MANAGER", permissions: [18 permisos]
    ↓
-3. POST /api/users requiere: Permission.USERS_CREATE ❌ (no incluido en HR_MANAGER)
+3. POST /api/users requiere: Permission.USERS_CREATE (no incluido en HR_MANAGER)
    ↓
 4. Sistema verifica: usuario tiene permiso?
    → NO, respuesta: 403 Forbidden "Permiso insuficiente"
@@ -338,7 +338,7 @@ curl -X POST http://localhost:3000/api/users/user-123/role \
    ↓
 2. JWT generado con: role: "HR_MANAGER", permissions: [18 permisos]
    ↓
-3. POST /api/users/import requiere: Permission.USERS_IMPORT ✅ (incluido en HR_MANAGER)
+3. POST /api/users/import requiere: Permission.USERS_IMPORT (incluido en HR_MANAGER)
    ↓
 4. Sistema verifica: usuario tiene permiso?
    → SÍ, procede con importación

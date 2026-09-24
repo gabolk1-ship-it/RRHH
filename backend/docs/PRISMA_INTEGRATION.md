@@ -12,12 +12,12 @@ The RRHH system has been fully integrated with Prisma ORM, providing a complete 
 src/modules/
 ├── auth/
 │   ├── auth.service.ts (mock/in-memory)
-│   ├── auth.service.prisma.ts (database-backed) ✓ ACTIVE
+│   ├── auth.service.prisma.ts (database-backed, active)
 │   ├── auth.controller.ts
 │   └── ...
 ├── users/
 │   ├── users.service.ts (mock/in-memory)
-│   ├── users.service.prisma.ts (database-backed) ✓ ACTIVE
+│   ├── users.service.prisma.ts (database-backed, active)
 │   ├── users.controller.ts
 │   └── ...
 ```

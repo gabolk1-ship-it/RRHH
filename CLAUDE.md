@@ -1,4 +1,4 @@
-# 🏥 Sistema de Control de Asistencia Biométrica - Hospital 24h
+# Sistema de Control de Asistencia Biométrica - Hospital 24h
 
 **Proyecto:** RRHH - Control Biométrico y Gestión de Personal  
 **Versión:** 1.0  
@@ -7,7 +7,7 @@
 
 ---
 
-## 📋 Descripción del Proyecto
+## Descripción del Proyecto
 
 Sistema integral de gestión de asistencia y recursos humanos para hospital de 24 horas que integra:
 
@@ -19,16 +19,16 @@ Sistema integral de gestión de asistencia y recursos humanos para hospital de 2
 
 ---
 
-## 🎯 Requisitos Principales
+## Requisitos Principales
 
 ### Funcionalidades Core
-- ✅ Captura de biométricos (entrada/salida)
-- ✅ Gestión de múltiples horarios por usuario
-- ✅ Control de vacaciones y antigüedad
-- ✅ Permisos médicos con granularidad de horas
-- ✅ Justificación de faltas digital
-- ✅ Reportes en tiempo real
-- ✅ Datos sensibles encriptados
+- Captura de biométricos (entrada/salida)
+- Gestión de múltiples horarios por usuario
+- Control de vacaciones y antigüedad
+- Permisos médicos con granularidad de horas
+- Justificación de faltas digital
+- Reportes en tiempo real
+- Datos sensibles encriptados
 
 ### Dispositivos Soportados
 - ZK Teco (huella dactilar)
@@ -38,7 +38,7 @@ Sistema integral de gestión de asistencia y recursos humanos para hospital de 2
 
 ---
 
-## 🏗️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 RRHH/
@@ -53,7 +53,7 @@ RRHH/
 
 ---
 
-## 💾 Stack Tecnológico (Propuesto)
+## Stack Tecnológico (Propuesto)
 
 ### Backend
 - **Runtime:** Node.js 18+
@@ -81,7 +81,7 @@ RRHH/
 
 ---
 
-## 👥 Equipo y Tareas
+## Equipo y Tareas
 
 ### Fase 1: Análisis y Diseño
 - [ ] Arquitectura de base de datos
@@ -115,7 +115,7 @@ RRHH/
 
 ---
 
-## 🔐 Consideraciones de Seguridad
+## Consideraciones de Seguridad
 
 1. **Datos Biométricos:** Encriptación en tránsito y reposo
 2. **RGPD/Privacidad:** Cumplimiento Ecuador
@@ -125,7 +125,7 @@ RRHH/
 
 ---
 
-## 📊 Base de Datos (Esquema Principal)
+## Base de Datos (Esquema Principal)
 
 ```sql
 -- Tablas principales
@@ -141,7 +141,7 @@ RRHH/
 
 ---
 
-## 🚀 Próximos Pasos
+## Próximos Pasos
 
 1. Revisión del plan arquitectónico completo
 2. Setup inicial del proyecto
@@ -151,7 +151,7 @@ RRHH/
 
 ---
 
-## 📞 Notas Importantes
+## Notas Importantes
 
 - **Hospital 24h:** Considerar turnos rotativos y solapamientos
 - **Cumplimiento:** IESS y SRI (nómina ecuatoriana)

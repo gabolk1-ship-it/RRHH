@@ -1,39 +1,39 @@
-# 🏥 Sistema de Control de Asistencia Biométrica
+# Sistema de Control de Asistencia Biométrica
 
 Aplicación integral de gestión de asistencia y recursos humanos para hospital de 24 horas con integración de dispositivos biométricos (huella dactilar, reconocimiento facial).
 
-## ✨ Características Principales
+## Características Principales
 
-- 📱 **Control Biométrico Multimodal**
+- **Control Biométrico Multimodal**
   - Huella dactilar (ZK Teco, Anviz)
   - Reconocimiento facial con IA
   - Múltiples dispositivos sincronizados
 
-- 👥 **Gestión de Personal**
+- **Gestión de Personal**
   - Múltiples horarios por usuario (turnos 24/7)
   - Gestión de antigüedad
   - Permisos médicos por horas
   - Vacaciones y descansos
 
-- 📊 **Reportes y Análitica**
+- **Reportes y Análitica**
   - Reportes de asistencia en tiempo real
   - Análisis de faltas y permisos
   - Exportación a Excel/PDF
   - Dashboards interactivos
 
-- 💻 **Portal de Empleado**
+- **Portal de Empleado**
   - Autoservicio de justificaciones
   - Solicitud de permisos
   - Visualización de datos personales
   - Histórico de asistencia
 
-- 🔐 **Seguridad**
+- **Seguridad**
   - Encriptación de datos sensibles
   - Autenticación multi-factor
   - Auditoría de accesos
   - Cumplimiento RGPD/Ecuador
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Requisitos Previos
 - Node.js 18+
@@ -61,7 +61,7 @@ npm run db:setup
 npm run dev
 ```
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 RRHH/
@@ -106,7 +106,7 @@ RRHH/
 └── README.md             # Este archivo
 ```
 
-## 🔌 Dispositivos Soportados
+## Dispositivos Soportados
 
 ### Huella Dactilar
 - **ZK Teco (Serie uFace)**
@@ -126,7 +126,7 @@ RRHH/
   - Google Cloud Vision
   - Microsoft Azure Face API
 
-## 🗄️ Base de Datos
+## Base de Datos
 
 PostgreSQL 14+ con esquema:
 
@@ -145,19 +145,19 @@ PostgreSQL 14+ con esquema:
 - audit_logs         -- Auditoría de accesos
 ```
 
-## 🔐 Seguridad
+## Seguridad
 
-- ✅ Encriptación de datos sensibles (AES-256)
-- ✅ Hashing de contraseñas (bcrypt)
-- ✅ JWT para autenticación
-- ✅ HTTPS/SSL en producción
-- ✅ Validación de entrada (sanitización)
-- ✅ Rate limiting en APIs
-- ✅ CORS configurado
-- ✅ Logs de auditoría
-- ✅ Cumplimiento OWASP Top 10
+- Encriptación de datos sensibles (AES-256)
+- Hashing de contraseñas (bcrypt)
+- JWT para autenticación
+- HTTPS/SSL en producción
+- Validación de entrada (sanitización)
+- Rate limiting en APIs
+- CORS configurado
+- Logs de auditoría
+- Cumplimiento OWASP Top 10
 
-## 📝 API Endpoints (principales)
+## API Endpoints (principales)
 
 ```
 POST   /api/auth/login              -- Iniciar sesión
@@ -180,7 +180,7 @@ POST   /api/biometric/sync          -- Sincronizar dispositivos
 GET    /api/biometric/status        -- Estado dispositivos
 ```
 
-## 🛠️ Desarrollo
+## Desarrollo
 
 ### Comandos Útiles
 
@@ -210,7 +210,7 @@ docker-compose up       # Iniciar stack
 docker-compose down     # Detener stack
 ```
 
-## 📊 Stack Tecnológico
+## Stack Tecnológico
 
 ### Backend
 - Node.js 18+
@@ -236,7 +236,7 @@ docker-compose down     # Detener stack
 - GitHub Actions (CI/CD)
 - Nginx (reverse proxy)
 
-## 📖 Documentación Completa
+## Documentación Completa
 
 - [API Documentation](./docs/API.md)
 - [Architecture](./docs/ARCHITECTURE.md)
@@ -244,7 +244,7 @@ docker-compose down     # Detener stack
 - [Database Schema](./database/schema.sql)
 - [Installation Guide](./docs/INSTALLATION.md)
 
-## 🤝 Contribuir
+## Contribuir
 
 Este es un proyecto privado. Para cambios:
 
@@ -253,17 +253,17 @@ Este es un proyecto privado. Para cambios:
 3. Push: `git push origin feature/nueva-caracteristica`
 4. Pull Request
 
-## 📞 Soporte
+## Soporte
 
 Para reportar bugs o sugerencias:
 - Crear un Issue en GitHub
 - Contactar al equipo de desarrollo
 
-## 📄 Licencia
+## Licencia
 
 Privado - Hospital 24 Horas Ecuador
 
-## ✅ Versiones de Características
+## Versiones de Características
 
 ### v1.0 (MVP)
 - [x] Control biométrico básico

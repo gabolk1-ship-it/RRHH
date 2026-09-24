@@ -8,12 +8,12 @@ El sistema RRHH proporciona un endpoint `/api/users/import` que permite migrar m
 
 ## Características
 
-✅ **Importación masiva:** Hasta 1,000 usuarios por solicitud  
-✅ **Validación individual:** Cada usuario se valida por separado  
-✅ **Reporte detallado:** Errores por fila (número de fila, email, mensaje de error)  
-✅ **Transacciones parciales:** Los usuarios válidos se crean incluso si otros fallan  
-✅ **Permisos basados en roles:** Solo usuarios con permiso `USERS_IMPORT` pueden importar  
-✅ **Asignación automática de roles:** Define rol por usuario en la importación  
+- **Importación masiva:** Hasta 1,000 usuarios por solicitud
+- **Validación individual:** Cada usuario se valida por separado
+- **Reporte detallado:** Errores por fila (número de fila, email, mensaje de error)
+- **Transacciones parciales:** Los usuarios válidos se crean incluso si otros fallan
+- **Permisos basados en roles:** Solo usuarios con permiso `USERS_IMPORT` pueden importar
+- **Asignación automática de roles:** Define rol por usuario en la importación
 
 ---
 
@@ -98,10 +98,10 @@ Content-Type: application/json
 ### Validaciones
 
 Cada usuario **debe** tener:
-- ✅ `email` - Válido y único en el sistema
-- ✅ `firstName` - Mínimo 2 caracteres
-- ✅ `lastName` - Mínimo 2 caracteres
-- ✅ `role` - Uno de: `ADMIN`, `HR_MANAGER`, `DEPARTMENT_HEAD`, `SUPERVISOR`, `EMPLOYEE`
+- `email` - Válido y único en el sistema
+- `firstName` - Mínimo 2 caracteres
+- `lastName` - Mínimo 2 caracteres
+- `role` - Uno de: `ADMIN`, `HR_MANAGER`, `DEPARTMENT_HEAD`, `SUPERVISOR`, `EMPLOYEE`
 
 Campos opcionales:
 - `password` - Si no se proporciona, se genera una contraseña aleatoria de 12 caracteres
@@ -351,32 +351,32 @@ function generateTemporaryPassword() {
 Cuando se importa un usuario con un rol específico, automáticamente recibe todos los permisos asociados:
 
 ### ADMIN
-- ✅ Todos los 40+ permisos disponibles
+- Todos los 40+ permisos disponibles
 
 ### HR_MANAGER
-- ✅ Gestión completa de empleados (crear, leer, actualizar, eliminar)
-- ✅ Importación de usuarios
-- ✅ Control de asistencia manual
-- ✅ Aprobación de vacaciones y permisos médicos
-- ✅ Visualización de auditoría
+- Gestión completa de empleados (crear, leer, actualizar, eliminar)
+- Importación de usuarios
+- Control de asistencia manual
+- Aprobación de vacaciones y permisos médicos
+- Visualización de auditoría
 
 ### DEPARTMENT_HEAD
-- ✅ Lectura de empleados del departamento
-- ✅ Corrección de asistencia
-- ✅ Aprobación de vacaciones y permisos médicos
-- ✅ Visualización de reportes
+- Lectura de empleados del departamento
+- Corrección de asistencia
+- Aprobación de vacaciones y permisos médicos
+- Visualización de reportes
 
 ### SUPERVISOR
-- ✅ Lectura de empleados
-- ✅ Visualización de asistencia
-- ✅ Aprobación de vacaciones y permisos
-- ✅ Visualización de reportes
+- Lectura de empleados
+- Visualización de asistencia
+- Aprobación de vacaciones y permisos
+- Visualización de reportes
 
 ### EMPLOYEE
-- ✅ Ver datos propios
-- ✅ Ver asistencia propia
-- ✅ Solicitar vacaciones/permisos médicos
-- ✅ Ver reportes propios
+- Ver datos propios
+- Ver asistencia propia
+- Solicitar vacaciones/permisos médicos
+- Ver reportes propios
 
 ---
 
@@ -395,12 +395,12 @@ Cuando se importa un usuario con un rol específico, automáticamente recibe tod
 
 ### Mejores prácticas:
 
-- 📋 **Divide importaciones grandes** - Si tienes 5,000 empleados, divide en 5 lotes de 1,000
-- ✅ **Valida antes de importar** - Verifica que no existan duplicados
-- 🔐 **Notifica empleados** - Envía contraseña temporal por email seguro
-- 📊 **Monitorea la importación** - Revisa el reporte de errores
-- 🔄 **Reintentos** - Corrije datos y reimporta filas fallidas
-- 📝 **Auditoría** - El sistema registra cada importación
+- **Divide importaciones grandes** - Si tienes 5,000 empleados, divide en 5 lotes de 1,000
+- **Valida antes de importar** - Verifica que no existan duplicados
+- **Notifica empleados** - Envía contraseña temporal por email seguro
+- **Monitorea la importación** - Revisa el reporte de errores
+- **Reintentos** - Corrije datos y reimporta filas fallidas
+- **Auditoría** - El sistema registra cada importación
 
 ---
 
@@ -451,10 +451,10 @@ Todos los eventos de importación se registran en auditoría:
 ```
 
 Esto permite rastrear:
-- ✅ Quién realizó la importación
-- ✅ Cuándo se ejecutó
-- ✅ Cuántos usuarios se crearon
-- ✅ Cuáles fallaron y por qué
+- Quién realizó la importación
+- Cuándo se ejecutó
+- Cuántos usuarios se crearon
+- Cuáles fallaron y por qué
 
 ---
 
